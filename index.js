@@ -12,6 +12,7 @@ router.all('/', function(req, res) {
   console.log(req)
   res.send({
     url: req.url || {},
+    ip: getIp(req),
     method: req.method || {},
     headers: req.headers || {},
     cookies: req.cookies || {},
@@ -19,6 +20,18 @@ router.all('/', function(req, res) {
     query: req.query || {}
   })
 })
+
+function getIp(req) {
+  try {
+    return (
+      req.headers['x-real-ip'] ||
+      req.headers['x-forwarded-for'] ||
+      req.socket.remoteAddress
+    )
+  } catch (e) {
+    return ''
+  }
+}
 
 app.use('/', router)
 
